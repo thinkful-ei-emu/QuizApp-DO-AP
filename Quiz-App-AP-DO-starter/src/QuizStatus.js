@@ -6,13 +6,11 @@ class QuizStatus extends Renderer {
     // return some HTML here, utilizing `this.model`
 
     return `
-      <div>
-      <span>
-      <div> Score: ${this.model.score}</div>
-      <div> High Score: ${this.model.highScore()}</div>
-      <div> Progress: ${this.model.quizProgress()} </div>
-      </span>
-      </div>
+      <ul class="nav">
+      <li class="score"> Score: ${this.model.score}</li>
+      <li class="high-score"> High Score: ${this.model.highScore()}</li>
+      <li class="progress"> Progress: ${this.model.quizProgress()} </li>
+      </ul>
     `;
   }
 }

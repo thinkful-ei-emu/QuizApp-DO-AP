@@ -5,16 +5,16 @@ import Renderer from './lib/Renderer';
 // import Question from './Question';
 
 class QuizDisplay extends Renderer {
-  
-  constructor(model,el){
-    
-    super(model,el);
+
+  constructor(model, el) {
+
+    super(model, el);
   }
-  
+
   getEvents() {
     return {
       'click .start-quiz': 'handleStart',
-      'submit .Answers': 'handleSubmit', 
+      'submit .Answers': 'handleSubmit',
       'click .continue': 'handleContinue',
 
     };
@@ -22,16 +22,16 @@ class QuizDisplay extends Renderer {
 
   _generateIntro() {
     return `
-      <div>
-        <p>
+      <div class"intro">
+        <p class="welcome">
           Welcome to the Trivia Quiz
         </p>
-        <p>
+        <p class="test">
           Test your smarts and see how high you can score!
         </p>
       </div>
       <div class="buttons">
-        <button class="start-quiz">Start Quiz</button>
+        <button class="start-quiz">Start</button>
       </div>
     `;
   }
@@ -40,32 +40,32 @@ class QuizDisplay extends Renderer {
 
   template() {
     let html = '';
-    
+
     if (this.model.asked.length === 0) {
       // Quiz has not started
       html = this._generateIntro();
     }
 
-    else if(this.model.getCurrentQuestion()){
-      if (this.model.getCurrentQuestion().userAnswer === null){
+    else if (this.model.getCurrentQuestion()) {
+      if (this.model.getCurrentQuestion().userAnswer === null) {
         html = this._currentQuestion();
       }
 
-      else if (this.model.getCurrentQuestion().userAnswer){
+      else if (this.model.getCurrentQuestion().userAnswer) {
 
-        if (this.model.getCurrentQuestion().getAnswerStatus() === 1){
+        if (this.model.getCurrentQuestion().getAnswerStatus() === 1) {
           html = this.generateAnswerIfCorrect();
         }
-       else{
-            html = this.generateAnswerIfWrong();
+        else {
+          html = this.generateAnswerIfWrong();
+        }
       }
     }
-  }
-  
-    else if (this.model.unasked.length === 0){
+
+    else if (this.model.unasked.length === 0) {
       html = this.generateQuizEnd();
     }
-  
+
     return html;
   }
 
@@ -75,8 +75,23 @@ class QuizDisplay extends Renderer {
 
   }
 
-  _currentQuestion(){
-    return `<div>
+  _currentQuestion() {
+    if (this.model.getCurrentQuestion().answers.length === 2) {
+      return `<div class="form-container">
+      <form class = "Answers">
+      <h1>${this.model.getCurrentQuestion().text}</h1>
+
+      <input type="radio" name="Answer" id="A" value="${this.model.getCurrentQuestion().answers[[0]]}" required/>
+      <label for = "Answer"> "${this.model.getCurrentQuestion().answers[[0]]}" </label>
+      <input type="radio" name="Answer" id="B" value="${this.model.getCurrentQuestion().answers[[1]]}" required/>
+      <label for = "Answer"> "${this.model.getCurrentQuestion().answers[[1]]}" </label>
+    <button type="submit" class="submit" name="submit" id="submit">Submit</button>
+    </form>
+</div>`;
+    }
+
+    else {
+      return `<div class="form-container">
 
             <form class = "Answers">
             <h1>${this.model.getCurrentQuestion().text}</h1>
@@ -92,9 +107,10 @@ class QuizDisplay extends Renderer {
           <button type="submit" class="submit" name="submit" id="submit">Submit</button>
           </form>
       </div>`;
+    }
   }
 
-  generateAnswerIfWrong(){
+  generateAnswerIfWrong() {
     return `<div>
           <h1>${this.model.getCurrentQuestion().text}</h1>
           <p> Sorry, that's incorrect. </p>
@@ -108,7 +124,7 @@ class QuizDisplay extends Renderer {
 
   }
 
-  generateAnswerIfCorrect(){
+  generateAnswerIfCorrect() {
     console.log('You are right');
     return `<div>
     <h1>${this.model.getCurrentQuestion().text}</h1>
@@ -122,38 +138,50 @@ class QuizDisplay extends Renderer {
   }
 
   generateQuizEnd() {
-    if(this.model.highscore){
+    if (this.model.highscore) {
 
-    return `<div>
+      return `<div>
     <h1>Good Job!</h1>
     <p> Your final score was ${this.model.score} out of 5.</p>
     <p> That's a new high score!</p>
     <button class="start-quiz">Play Again</button>
     </div>`;
-  }
-  else{
-    return `<div>
+    }
+    else {
+      return `<div>
     <h1>Good Job!</h1>
     <p> Your final score was ${this.model.score} out of 5.</p>
     <button class="start-quiz">Play Again</button>
     </div>`;
-  }
-  
-}
+    }
 
-  handleSubmit(event){
+  }
+
+  handleSubmit(event) {
     event.preventDefault();
     //console.log('Hi there!');
-    let answer=$('input[name=Answer]:checked').val(); 
+    let answer = $('input[name=Answer]:checked').val();
     //console.log(answer);
     this.model.answerCurrentQuestion(answer);
 
   }
 
-  handleContinue(){
+  handleContinue() {
     this.model.nextQuestion();
   }
 
 }
 
 export default QuizDisplay;
+
+
+
+// Sorry, that's incorrect.
+
+// You answered:
+
+// Sheep's Heart, Liver and Lungs
+
+// The correct answer was:
+
+// Sheep's Heart, Liver and Lungs
