@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import Renderer from './lib/Renderer';
-import Model from './lib/Model';
-import Quiz from './Quiz';
-import Question from './Question';
+// import Model from './lib/Model';
+// import Quiz from './Quiz';
+// import Question from './Question';
 
 class QuizDisplay extends Renderer {
   
@@ -15,7 +15,7 @@ class QuizDisplay extends Renderer {
     return {
       'click .start-quiz': 'handleStart',
       'submit .Answers': 'handleSubmit', 
-
+      'click .continue': 'handleContinue',
 
     };
   }
@@ -52,27 +52,26 @@ class QuizDisplay extends Renderer {
       }
 
       else if (this.model.getCurrentQuestion().userAnswer){
+
         if (this.model.getCurrentQuestion().getAnswerStatus() === 1){
           html = this.generateAnswerIfCorrect();
         }
-      }
-      else{
-        if (this.model.getCurrentQuestion().getAnswerStatus() === 0){
-
-        
-          html = this.generateAnswerIfWrong();
-        }
+       else{
+            html = this.generateAnswerIfWrong();
       }
     }
-    
+  }
+  
+    else if (this.model.unasked.length === 0){
+      html = this.generateQuizEnd();
+    }
+  
     return html;
   }
 
 
   handleStart() {
     this.model.startGame();
-    // this._generateQuestion();
-    // Model.update();
 
   }
 
@@ -96,7 +95,6 @@ class QuizDisplay extends Renderer {
   }
 
   generateAnswerIfWrong(){
-    console.log('You are wrong!');
     return `<div>
           <h1>${this.model.getCurrentQuestion().text}</h1>
           <p> Sorry, that's incorrect. </p>
@@ -104,7 +102,7 @@ class QuizDisplay extends Renderer {
           <p> ${this.model.getCurrentQuestion().userAnswer} </p>
           <p> The correct answer was: </p>
           <p> ${this.model.getCurrentQuestion().correctAnswer} </p>
-          <button type = "submit" class = "submit" name ="continue"> Continue </button>
+          <button type="submit" class="continue">Continue</button>
           </div>
           `;
 
@@ -117,20 +115,43 @@ class QuizDisplay extends Renderer {
     <p> You got it! </p>
     <p> The correct answer was: </p>
     <p> ${this.model.getCurrentQuestion().correctAnswer} </p>
-    </div>
-    <button type = "submit" class = "submit" name ="continue"> Continue </button>
-    `;
+    <button type="submit" class="continue">Continue</button>
+    </div>`;
 
 
   }
 
+  generateQuizEnd() {
+    if(this.model.highscore){
+
+    return `<div>
+    <h1>Good Job!</h1>
+    <p> Your final score was ${this.model.score} out of 5.</p>
+    <p> That's a new high score!</p>
+    <button class="start-quiz">Play Again</button>
+    </div>`;
+  }
+  else{
+    return `<div>
+    <h1>Good Job!</h1>
+    <p> Your final score was ${this.model.score} out of 5.</p>
+    <button class="start-quiz">Play Again</button>
+    </div>`;
+  }
+  
+}
+
   handleSubmit(event){
     event.preventDefault();
-    console.log('Hi there!');
+    //console.log('Hi there!');
     let answer=$('input[name=Answer]:checked').val(); 
-    console.log(answer);
+    //console.log(answer);
     this.model.answerCurrentQuestion(answer);
 
+  }
+
+  handleContinue(){
+    this.model.nextQuestion();
   }
 
 }

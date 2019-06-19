@@ -4,10 +4,11 @@ import Model from './lib/Model';
 
 class Quiz extends Model {
 
-  static DEFAULT_QUIZ_LENGTH = 2;
+  static DEFAULT_QUIZ_LENGTH = 5;
 
   constructor() {
     super();
+
     // Array of Question instances
     this.unasked = [];
     // Array of Question instances
@@ -15,17 +16,21 @@ class Quiz extends Model {
     this.active = false;
 
     // TASK: Add more props here per the exercise
-    super();
     this.score = 0;
     this.scoreHistory = [];
+    this.highscore = false;
 
   }
 
   // Example method:
   startGame() {
     console.log("start game ran")
-    // this.active = true;
-    // this.score = 0;
+    this.active = false;
+    this.score = 0;
+    this.asked = [];
+    this.unasked = [];
+    this.highscore = false;
+
     const triviaApi = new TriviaApi();
     triviaApi.fetchQuestions(Quiz.DEFAULT_QUIZ_LENGTH)
       .then(data => {
@@ -40,7 +45,7 @@ class Quiz extends Model {
   }
 
   getCurrentQuestion() {
-    console.log('get current question ran!')
+    //console.log('get current question ran!')
     return this.asked[0];
   }
 
@@ -51,6 +56,12 @@ class Quiz extends Model {
     }
 
     this.asked.unshift(this.unasked.pop());
+   
+    if(this.asked.length === 6){
+      this.endQuiz();
+    }
+
+    this.update();
     return true;
   }
 
@@ -60,7 +71,7 @@ class Quiz extends Model {
   }
 
   answerCurrentQuestion(answerText) {
-    console.log("answerCurrentQUestion ran")
+    //console.log("answerCurrentQUestion ran")
     const currentQ = this.getCurrentQuestion();
     // Cannot find current question, so fail to answer
     if (!currentQ) return false;
@@ -74,9 +85,38 @@ class Quiz extends Model {
     if (currentQ.getAnswerStatus() === 1) {
       this.increaseScore();
     }
-
+    this.update();
     return true;
   }
+
+  highScore(){
+    let highScore = 0;
+    if (this.scoreHistory.length === 0){
+      return highScore;
+    }
+    else{
+      highScore = Math.max(...this.scoreHistory);
+      return highScore;
+    }
+  }
+
+  endQuiz(){
+    if (this.score > this.highScore()){
+      this.highscore = true;
+    }
+    this.scoreHistory.push(this.score);
+    this.active = false;
+  }
+
+  quizProgress(){
+    if(this.active === false){
+      return 'Inactive';
+    }
+    else{
+      return `${this.asked.length} of 5`;
+    }
+  }
+
 }
 
 export default Quiz;

@@ -8,7 +8,9 @@ class QuizStatus extends Renderer {
     return `
       <div>
       <span>
-      <div>Score: ${this.model.score} High Score: Score here Progress: 1 of 5 </div>
+      <div> Score: ${this.model.score}</div>
+      <div> High Score: ${this.model.highScore()}</div>
+      <div> Progress: ${this.model.quizProgress()} </div>
       </span>
       </div>
     `;

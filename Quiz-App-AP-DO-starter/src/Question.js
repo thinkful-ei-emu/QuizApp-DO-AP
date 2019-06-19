@@ -24,7 +24,7 @@ class Question {
   }
 
   submitAnswer(answer) {
-    console.log('submit answer ran', answer);
+    //console.log('submit answer ran', answer);
     this.userAnswer = answer;
   }
 
