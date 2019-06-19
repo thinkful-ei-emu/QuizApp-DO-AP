@@ -81,13 +81,13 @@ class QuizDisplay extends Renderer {
             <form class = "Answers">
             <h1>${this.model.getCurrentQuestion().text}</h1>
 
-            <input type="radio" name="Answer" id="A" value="${this.model.getCurrentQuestion().answers[[0]]}"/>
+            <input type="radio" name="Answer" id="A" value="${this.model.getCurrentQuestion().answers[[0]]}" required/>
             <label for = "Answer"> "${this.model.getCurrentQuestion().answers[[0]]}" </label>
-            <input type="radio" name="Answer" id="B" value="${this.model.getCurrentQuestion().answers[[1]]}"/>
+            <input type="radio" name="Answer" id="B" value="${this.model.getCurrentQuestion().answers[[1]]}" required/>
             <label for = "Answer"> "${this.model.getCurrentQuestion().answers[[1]]}" </label>
-            <input type="radio" name="Answer" id="C" value="${this.model.getCurrentQuestion().answers[[2]]}"/>
+            <input type="radio" name="Answer" id="C" value="${this.model.getCurrentQuestion().answers[[2]]}" required/>
             <label for = "Answer"> "${this.model.getCurrentQuestion().answers[[2]]}" </label>
-            <input type="radio" name="Answer" id="D" value="${this.model.getCurrentQuestion().answers[[3]]}"/>
+            <input type="radio" name="Answer" id="D" value="${this.model.getCurrentQuestion().answers[[3]]}" required/>
             <label for = "Answer"> "${this.model.getCurrentQuestion().answers[[3]]}" </label>
           <button type="submit" class="submit" name="submit" id="submit">Submit</button>
           </form>
